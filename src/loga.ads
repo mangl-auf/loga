@@ -1,7 +1,8 @@
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
-package Debug is
+package Loga is
     type Logger is tagged private;
+
     procedure New_Logger (Self : in out Logger; Name : String);
     procedure Log (Self : Logger; Message : String);
 private 
@@ -18,10 +19,13 @@ private
     type Logger is tagged record
         Name     : Unbounded_String;
         Color    : Colors;
-        Disabled : Boolean := False;
+        Disabled : Boolean := True;
     end record;
-
-    Current_Color : Natural range 31 .. 36 := Colors_As_Integer (Red);
+    
+    Current_Color : Natural range Colors_As_Integer (Colors'Val (1)) .. Colors_As_Integer (Colors'Last)
+        := Colors_As_Integer (Red);
 
     procedure Colorize_Output (Color : Colors);
-end Debug;
+    function Start_Bold return String;
+    function End_Bold return String;
+end Loga;

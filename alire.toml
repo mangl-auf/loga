@@ -1,5 +1,5 @@
-name = "debug"
-description = "Simple library for debuging"
+name = "loga"
+description = "Simple library for logging some data"
 version = "1.0.0"
 
 authors = ["Cyrill Korshnyak ł"]

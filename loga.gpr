@@ -1,6 +1,6 @@
 project Debug is
 
-   for Library_Name use "Debug";
+   for Library_Name use "Loga";
    for Library_Version use "0.0.0";
 
    for Source_Dirs         use ("src");
@@ -62,7 +62,7 @@ project Debug is
    Build_Switches := ();
    case Build_Mode is
       when "optimize" =>
-         Build_Switches := ("-O3",     -- Optimization
+         Build_Switches := ("-O2",     -- Optimization
                             "-gnatn"); -- Enable inlining
       when "debug" =>
          Build_Switches := ("-g",   -- Debug info
