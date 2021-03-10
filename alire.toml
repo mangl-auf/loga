@@ -1,0 +1,7 @@
+name = "debug"
+description = "Simple library for debuging"
+version = "1.0.0"
+
+authors = ["Cyrill Korshnyak ł"]
+maintainers = ["Cyrill Korshnyak <kirilkorshnyak@yandex.ru>"]
+maintainers-logins = ["mangl-auf"]
