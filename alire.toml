@@ -7,3 +7,4 @@ maintainers = ["Cyrill Korshnyak <kirillkorshnyak@yandex.com>"]
 maintainers-logins = ["mangl-auf"]
 tags = ["logging"]
 website = "https://github.com/mangl-auf/loga/"
+licenses = "Unlicense"
