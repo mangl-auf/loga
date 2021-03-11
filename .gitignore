@@ -1,7 +1,4 @@
 obj/
 lib/
 alire/
-*.ali
-*.o
-main
-main.adb
+test/
