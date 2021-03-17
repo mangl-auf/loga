@@ -56,6 +56,7 @@ procedure Main is
 
    task body T is
    begin
+      My_Library_Tasking_Logger.New_Logger ("my_library:tasking");
       for I in 1 .. 3 loop
          My_Library_Tasking_Logger.Log ("Hello from task!");
       end loop;
@@ -68,7 +69,6 @@ procedure Main is
    end Square;
 begin
    My_Library_Main_Logger.New_Logger ("my_library:main");
-   My_Library_Tasking_Logger.New_Logger ("my_library:tasking");
    My_Library_Function_Logger.New_Logger ("my_library:function");
 
    My_Library_Main_Logger.Log ("Starting main process executing");
