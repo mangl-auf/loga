@@ -1,5 +1,6 @@
 # Loga
 Loga is simple Ada library for logging. Equivalent of "debug" npm package for Node.JS
+
 ## Usage example
 `main.adb`
 ```ada
@@ -26,12 +27,21 @@ begin
    Http_Logger.Log ("Finishing job");
 end Main;
 ```
+
 Then compile it and run this command:
 ```
-DEBUG=task,http ./main
+DEBUG="task,http" ./main
 ```
-Output:
-![Image of output](https://github.com/mangl-auf/loga/blob/master/output.png?raw=true)
+
+<figcaption>
+
+__Output:__
+
+</figcaption>
+
+![Image of output](https://github.com/mangl-auf/loga/blob/master/output.png?raw=true) 
+
 ## Todo
-Add wildcards support for DEBUG environment variable.  
+Add NORMAL wildcards support, i.e. `lib*some*` should work (Now it doesn't), but in general wildcards work and you can see it in example.  
+Add some more colors  
 Check Windows compatibility :3

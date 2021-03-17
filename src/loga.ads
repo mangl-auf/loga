@@ -23,8 +23,4 @@ private
 
    Current_Color : Natural range Colors_As_Integer (Colors'Val (1)) ..
       Colors_As_Integer (Colors'Last) := Colors_As_Integer (Red);
-
-   procedure Colorize_Output (Color : Colors);
-   function Start_Bold return String;
-   function End_Bold return String;
 end Loga;

@@ -9,6 +9,22 @@ package body Loga is
    ----------------
 
    procedure New_Logger (Self : in out Logger; Name : String) is
+      function Contains_Wildcard (Var : String; Index : out Positive)
+        return Boolean;
+
+      function Contains_Wildcard (Var : String; Index : out Positive)
+        return Boolean is
+      begin
+         for I in Var'Range loop
+            if Var (I) = '*' then
+               Index := I;
+               return True;
+            end if;
+         end loop;
+
+         return False;
+      end Contains_Wildcard;
+
       package Env renames Ada.Environment_Variables;
 
       Debug_Env_Var         : Unbounded_String;
@@ -27,12 +43,30 @@ package body Loga is
                                Mode => GNAT.String_Split.Multiple);
 
       for I in 1 .. GNAT.String_Split.Slice_Count (Vars_In_Debug_Env_Var) loop
-         if GNAT.String_Split.Slice (Vars_In_Debug_Env_Var, I) = Name then
-            Self.Disabled := False;
-            exit;
-         else
-            Self.Disabled := True;
-         end if;
+         declare
+            Var : constant String :=
+              GNAT.String_Split.Slice (Vars_In_Debug_Env_Var, I);
+            Index_Of_Wildcard : Positive;
+         begin
+            if Name'Length >= Var'Length
+              and then Contains_Wildcard (Var, Index_Of_Wildcard)
+            then
+               if Index_Of_Wildcard = 1
+                 and then Var (2 .. Var'Length) =
+                   Name (Name'Last - Var'Length + 2 .. Name'Last)
+               then
+                  Self.Disabled := False;
+               elsif Index_Of_Wildcard = Var'Last
+                 and then Var (Var'First .. Var'Last - 1) =
+                   Name (Name'First .. Var'Length - 1)
+               then
+                  Self.Disabled := False;
+               end if;
+            elsif Var = Name then
+               Self.Disabled := False;
+               exit;
+            end if;
+         end;
       end loop;
 
       if Self.Disabled then
@@ -52,6 +86,27 @@ package body Loga is
    ---------
 
    procedure Log (Self : Logger; Message : String) is
+      procedure Colorize_Output (Color : Colors);
+      function Start_Bold return String;
+      function End_Bold return String;
+
+      procedure Colorize_Output (Color : Colors) is
+         use Ada.Integer_Text_IO;
+      begin
+         Put (Character'Val (27) & "[");
+         Put (Colors_As_Integer (Color), Width => 0);
+         Put ("m");
+      end Colorize_Output;
+
+      function Start_Bold return String is
+      begin
+         return Character'Val (27) & "[1m";
+      end Start_Bold;
+
+      function End_Bold return String is
+      begin
+         return Character'Val (27) & "[0m";
+      end End_Bold;
    begin
       if not Self.Disabled then
          Colorize_Output (Self.Color);
@@ -60,24 +115,4 @@ package body Loga is
          Put_Line (Message);
       end if;
    end Log;
-
-   -- Private part --
-
-   procedure Colorize_Output (Color : Colors) is
-      use Ada.Integer_Text_IO;
-   begin
-      Put (Character'Val (27) & "[");
-      Put (Colors_As_Integer (Color), Width => 0);
-      Put ("m");
-   end Colorize_Output;
-
-   function Start_Bold return String is
-   begin
-      return Character'Val (27) & "[1m";
-   end Start_Bold;
-
-   function End_Bold return String is
-   begin
-      return Character'Val (27) & "[0m";
-   end End_Bold;
 end Loga;
