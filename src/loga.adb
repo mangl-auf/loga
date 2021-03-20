@@ -8,7 +8,13 @@ package body Loga is
    -- New_Logger --
    ----------------
 
-   procedure New_Logger (Self : in out Logger; Name : String) is
+   Current_Color : Natural range Colors_As_Integer (Colors'Val (1)) ..
+      Colors_As_Integer (Colors'Last) := Colors_As_Integer (Red);
+
+   procedure New_Logger (Self  : in out Logger;
+                         Name  : String;
+                         Color : Colors := Normal)
+   is
       function Contains_Wildcard (Var : String; Index : out Positive)
         return Boolean;
 
@@ -48,7 +54,7 @@ package body Loga is
               GNAT.String_Split.Slice (Vars_In_Debug_Env_Var, I);
             Index_Of_Wildcard : Positive;
          begin
-            if Name'Length >= Var'Length
+            if Name'Length >= Var'Length - 1
               and then Contains_Wildcard (Var, Index_Of_Wildcard)
             then
                if Index_Of_Wildcard = 1
@@ -77,7 +83,12 @@ package body Loga is
       if Current_Color > Colors_As_Integer (Colors'Last) then
          Current_Color := Colors_As_Integer (Colors'Val (1));
       end if;
-      Self.Color    := Colors'Val (Current_Color - 30);
+
+      if Color /= Normal then
+         Self.Color := Color;
+      else
+         Self.Color := Colors'Val (Current_Color - 30);
+      end if;
       Current_Color := Current_Color + 1;
    end New_Logger;
 
@@ -115,4 +126,13 @@ package body Loga is
          Put_Line (Message);
       end if;
    end Log;
+
+   ---------------
+   -- Get_Color --
+   ---------------
+
+   function Get_Color (Self : Logger) return Colors is
+   begin
+      return Self.Color;
+   end Get_Color;
 end Loga;

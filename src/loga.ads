@@ -2,12 +2,16 @@ with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 package Loga is
    type Logger is tagged private;
-
-   procedure New_Logger (Self : in out Logger; Name : String);
-   procedure Log (Self : Logger; Message : String);
-private
    type Colors is (Normal, Red, Green, Yellow, Blue, Magenta, Cyan);
 
+   procedure New_Logger (Self  : in out Logger;
+                         Name  : String;
+                         Color : Colors := Normal);
+
+   procedure Log (Self : Logger; Message : String);
+
+   function Get_Color (Self : Logger) return Colors;
+private
    Colors_As_Integer : array (Colors) of Natural := (Normal  => 0,
                                                      Red     => 31,
                                                      Green   => 32,
@@ -20,7 +24,4 @@ private
       Color    : Colors;
       Disabled : Boolean := True;
    end record;
-
-   Current_Color : Natural range Colors_As_Integer (Colors'Val (1)) ..
-      Colors_As_Integer (Colors'Last) := Colors_As_Integer (Red);
 end Loga;
