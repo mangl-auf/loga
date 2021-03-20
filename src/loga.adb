@@ -11,10 +11,16 @@ package body Loga is
    Current_Color : Natural range Colors_As_Integer (Colors'Val (1)) ..
       Colors_As_Integer (Colors'Last) := Colors_As_Integer (Red);
 
-   procedure New_Logger (Self  : in out Logger;
-                         Name  : String;
-                         Color : Colors := Normal)
+   function New_Logger (Name  : String;
+                        Color : Colors := Normal) return Logger
    is
+      Result : Logger;
+
+      package Env renames Ada.Environment_Variables;
+
+      Debug_Env_Var         : Unbounded_String;
+      Vars_In_Debug_Env_Var : GNAT.String_Split.Slice_Set;
+
       function Contains_Wildcard (Var : String; Index : out Positive)
         return Boolean;
 
@@ -30,19 +36,15 @@ package body Loga is
 
          return False;
       end Contains_Wildcard;
-
-      package Env renames Ada.Environment_Variables;
-
-      Debug_Env_Var         : Unbounded_String;
-      Vars_In_Debug_Env_Var : GNAT.String_Split.Slice_Set;
    begin
       begin
          Debug_Env_Var := To_Unbounded_String (Env.Value ("DEBUG"));
       exception
          when Constraint_Error =>
-            Self.Disabled := True;
-            return;
+            Result.Disabled := True;
+            return Result;
       end;
+
       GNAT.String_Split.Create (S => Vars_In_Debug_Env_Var,
                                From => To_String (Debug_Env_Var),
                                Separators => ",",
@@ -61,35 +63,37 @@ package body Loga is
                  and then Var (2 .. Var'Length) =
                    Name (Name'Last - Var'Length + 2 .. Name'Last)
                then
-                  Self.Disabled := False;
+                  Result.Disabled := False;
                elsif Index_Of_Wildcard = Var'Last
                  and then Var (Var'First .. Var'Last - 1) =
                    Name (Name'First .. Var'Length - 1)
                then
-                  Self.Disabled := False;
+                  Result.Disabled := False;
                end if;
             elsif Var = Name then
-               Self.Disabled := False;
+               Result.Disabled := False;
                exit;
             end if;
          end;
       end loop;
 
-      if Self.Disabled then
-         return;
+      if Result.Disabled then
+         return Result;
       end if;
 
-      Self.Name := To_Unbounded_String (Name);
+      Result.Name := To_Unbounded_String (Name);
       if Current_Color > Colors_As_Integer (Colors'Last) then
          Current_Color := Colors_As_Integer (Colors'Val (1));
       end if;
 
       if Color /= Normal then
-         Self.Color := Color;
+         Result.Color := Color;
       else
-         Self.Color := Colors'Val (Current_Color - 30);
+         Result.Color := Colors'Val (Current_Color - 30);
       end if;
       Current_Color := Current_Color + 1;
+
+      return Result;
    end New_Logger;
 
    ---------

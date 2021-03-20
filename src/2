@@ -7,6 +7,7 @@ package Loga is
    function New_Logger (Name  : String;
                         Color : Colors := Normal) return Logger;
 
+
    procedure Log (Self : Logger; Message : String);
 
    function Get_Color (Self : Logger) return Colors;
