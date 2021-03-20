@@ -99,6 +99,6 @@ Another_Logger_With_My_Color : Loga.Logger := Loga.New_Logger (Name => "logger2"
 ```
 
 ## Todo
-Add NORMAL wildcards support, i.e. `lib*some*` should work (Now it doesn't), but in general wildcards work and you can see it in example.
-Add some more colors
-Check Windows compatibility :3
+Add NORMAL wildcards support, i.e. `lib*some*` should work (Now it doesn't), but in general wildcards work and you can see it in example.  
+Add some more colors  
+Check Windows compatibility :3  
