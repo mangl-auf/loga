@@ -1,6 +1,6 @@
 name = "loga"
 description = "Simple library for simple logging. Like npm package \"debug\", but for Ada"
-version = "1.0.0"
+version = "1.2.0"
 
 authors = ["Cyrill Korshnyak ł"]
 maintainers = ["Cyrill Korshnyak <kirillkorshnyak@yandex.com>"]
